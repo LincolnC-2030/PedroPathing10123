@@ -12,11 +12,7 @@ import com.pedropathing.ivy.Scheduler;
 import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 import com.pedropathing.ivy.Command;
-import com.pedropathing.ivy.Scheduler;
-
-import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.groups.Groups.sequential;
-import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
 @Autonomous
@@ -28,11 +24,15 @@ public class ExampleAuto extends OpMode {
     private final Pose parkPose = poseFactory.of(72, 48, 90);
     private Follower follower; // Add this
     private final PoseFactory p = PoseFactory.degrees(); // add this
+    private final Pose park = p.of(48, 48, 90);
+    private final Pose controlPose = p.of(36, 60, 45);
     private Command autoRoutine() {
         return sequential(
                 follow(follower, startToScore()),
                 // Add mechanism commands here.
-                follow(follower, park())
+                follow(follower, backToStart()),
+                follow(follower, startToScore()),
+                follow(follower, scoreToPark())
         );
     }
     @Override
@@ -60,15 +60,16 @@ public class ExampleAuto extends OpMode {
         return line(startPose, scorePose).linear(startPose, scorePose);
     }
 
-    private Path park(){
+    private Path scoreToPark(){
         return line(scorePose, parkPose).linear(scorePose, parkPose);
     }
-    private final Pose park = p.of(48, 48, 90);
+
+    private Path backToStart(){
+        return line(scorePose, startPose).linear(scorePose, startPose);
+    }
     // other poses...
-    private final Pose controlPose = p.of(36, 60, 45);
 
 
 
     }
-    // other poses...
 
