@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.pedro.Constants;
 public class ExampleAuto extends OpMode {
 // I recommend using the auto-tuner on http://192.168.43.1:10158/ to find poses
 // Here the currently defined poses:
+    // MEOW MEOW MEOW MEOW
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final Pose startPose = poseFactory.of(24, 24, 0);
     private final Pose scorePose = poseFactory.of(48, 48, 90);
