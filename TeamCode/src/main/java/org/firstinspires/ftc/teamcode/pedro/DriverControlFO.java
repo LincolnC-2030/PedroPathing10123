@@ -29,7 +29,7 @@ public class DriverControlFO extends OpMode {
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private Pose currentPose = poseFactory.of(0.0,0.0,0.0);
     private Pose shootingPose = poseFactory.of(0.0,0.0,0.0);
-    private Servo RGB;
+//    private Servo RGB;
 
 
     @Override
@@ -38,7 +38,7 @@ public class DriverControlFO extends OpMode {
         follower = Constants.create(hardwareMap);
         follower.setPose(currentPose);
         follower.update();
-        RGB = hardwareMap.get(Servo.class, "indLight");
+//        RGB = hardwareMap.get(Servo.class, "indLight");
 
     }
 
@@ -61,7 +61,7 @@ public class DriverControlFO extends OpMode {
                     Path pathToShooter = line(currentPose,shootingPose).linear(currentPose,shootingPose);
                     follower.follow(pathToShooter);
                     currentState = DriveState.AUTO;
-                    RGB.setPosition(1.0);
+//                    RGB.setPosition(1.0);
                 }
 
                 break;
@@ -74,7 +74,7 @@ public class DriverControlFO extends OpMode {
                 if (!follower.isBusy() || driverInterrupt){
                     follower.stop();
                     currentState = DriveState.MANUAL;
-                    RGB.setPosition(0.0);
+//                    RGB.setPosition(0.0);
                 }
                 break;
         }

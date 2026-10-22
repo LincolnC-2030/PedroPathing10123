@@ -45,7 +45,7 @@ public class DriveTrain {
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection =
                 RevHubOrientationOnRobot.LogoFacingDirection.UP;
         RevHubOrientationOnRobot.UsbFacingDirection usbDirection =
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT; // MAYBE CHANGE BACK TO FORWARD IF IT BREAKS ANYTHING
         RevHubOrientationOnRobot orientationOnRobot =
                 new RevHubOrientationOnRobot(logoDirection, usbDirection);
         IMU.Parameters parameters = new IMU.Parameters(orientationOnRobot);
