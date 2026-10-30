@@ -16,6 +16,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptRevLED;
 import org.firstinspires.ftc.teamcode.pedro.Subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.pedro.Subsystems.RGBIndicator;
+import org.firstinspires.ftc.teamcode.pedro.Subsystems.Shooter;
 
 @TeleOp(name = "Driver Control Field Oriented")
 public class DriverControlFO extends OpMode {
@@ -29,17 +31,20 @@ public class DriverControlFO extends OpMode {
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private Pose currentPose = poseFactory.of(0.0,0.0,0.0);
     private Pose shootingPose = poseFactory.of(0.0,0.0,0.0);
-//    private Servo RGB;
+    private RGBIndicator rgb;
+
+    private Shooter shooter;
 
 
     @Override
     public void init() {
+        rgb = new RGBIndicator(hardwareMap);
+        rgb.setZERO();
         driveTrain = new DriveTrain(hardwareMap);
         follower = Constants.create(hardwareMap);
         follower.setPose(currentPose);
         follower.update();
-//        RGB = hardwareMap.get(Servo.class, "indLight");
-
+        shooter = new Shooter(hardwareMap);
     }
 
     @Override
@@ -61,12 +66,45 @@ public class DriverControlFO extends OpMode {
                     Path pathToShooter = line(currentPose,shootingPose).linear(currentPose,shootingPose);
                     follower.follow(pathToShooter);
                     currentState = DriveState.AUTO;
-//                    RGB.setPosition(1.0);
                 }
+
+                // 2
+//                if (gamepad1.aWasPressed() && !(gamepad1.left_trigger_pressed)){
+//                    shootingPose = follower.pose();
+//                }
+//                if (gamepad1.aWasPressed() && gamepad1.left_trigger_pressed){
+//                    currentPose = follower.pose();
+//                    Path pathToShooter = line(currentPose,shootingPose).linear(currentPose,shootingPose);
+//                    follower.follow(pathToShooter);
+//                    currentState = DriveState.AUTO;
+//                }
+                // 1
+//                if (gamepad1.aWasPressed() && gamepad1.left_trigger_pressed ){
+//                    currentPose = follower.pose();
+//                    Path pathToShooter = line(currentPose,shootingPose).linear(currentPose,shootingPose);
+//                    follower.follow(pathToShooter);
+//                    currentState = DriveState.AUTO;
+//                    telemetry.addData("movin:","moving");
+//                }
+//                else if (gamepad1.aWasPressed()){
+//                    shootingPose = follower.pose();
+//                    telemetry.addData("pose set:","pose set");
+//
+//                }
+                if (gamepad1.aWasPressed()){
+                    shooter.setVelocity(2000);
+                }
+                if (gamepad1.bWasPressed()){
+                    shooter.stop();
+                }
+//                shooter.setVelocity(gamepad1.left_trigger * 3000);
+
+
 
                 break;
             case AUTO:
                 gamepad1.rumble(25);
+                rgb.setGREEN();
                 boolean driverInterrupt = Math.abs(gamepad1.left_stick_y) > 0.1 ||
                         Math.abs(gamepad1.left_stick_x) > 0.1 ||
                         Math.abs(gamepad1.right_stick_x) > 0.1 ||
@@ -74,7 +112,7 @@ public class DriverControlFO extends OpMode {
                 if (!follower.isBusy() || driverInterrupt){
                     follower.stop();
                     currentState = DriveState.MANUAL;
-//                    RGB.setPosition(0.0);
+                    rgb.setZERO();
                 }
                 break;
         }

@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode.pedro.Subsystems;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import kotlin.random.URandomKt;
+
 public class RGBIndicator {
     private Servo RGB;
 
-    double RAINBOWvariable = 0.0;
+    double rainbowVariable = 0.0;
 
 
     public RGBIndicator(HardwareMap hardwareMap){
@@ -15,6 +18,9 @@ public class RGBIndicator {
     }
     public void setGREEN(){
         RGB.setPosition(0.444);
+    }
+    public void setZERO(){
+        RGB.setPosition(0.0);
     }
     public void setRED(){
         RGB.setPosition(0.277);
@@ -26,7 +32,7 @@ public class RGBIndicator {
         RGB.setPosition(0.388);
     }
     public void setRAINBOW(){
-        RGB.setPosition(RAINBOWvariable);
-        RAINBOWvariable += 0.025;
-        if (RAINBOWvariable > 1.0){ RAINBOWvariable = 0.0;}
+        RGB.setPosition(rainbowVariable);
+        rainbowVariable += 0.005;
+        if (rainbowVariable > 0.722||rainbowVariable < 0.277){ rainbowVariable = Math.random();}
 }}
