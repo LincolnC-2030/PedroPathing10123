@@ -60,6 +60,8 @@ public class Constants {
                 c.maxAchievableStrafeVelocity.set(49.85832568929801);
                 c.naturalForwardDeceleration.set(29.812632294841006);
                 c.naturalStrafeDeceleration.set(47.42547986505046);
+                c.maxVelocityConstraint.set(30.0);
+
             }
     );
     public static Follower create(HardwareMap h) {
