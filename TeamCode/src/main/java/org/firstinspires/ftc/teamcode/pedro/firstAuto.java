@@ -12,32 +12,25 @@ import com.pedropathing.ivy.Scheduler;
 import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 import com.pedropathing.ivy.Command;
-import com.qualcomm.robotcore.robocol.TelemetryMessage;
-
 import static com.pedropathing.ivy.groups.Groups.sequential;
-import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.firstinspires.ftc.teamcode.pedro.Subsystems.RGBIndicator;
 
 @Autonomous
 public class firstAuto extends OpMode {
-    // I recommend using the auto-tuner on http://192.168.43.1:10158/ to find poses
 // Here the currently defined poses:
-    // MEOW MEOW MEOW MEOW
-    // yes, I agree
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final Pose startPose = poseFactory.of(32, 10, 0);
     private final Pose shootingPoint = poseFactory.of(58.4, 37, 90);
     private final Pose pickUpPoint = poseFactory.of(31.9, 10, 0);
     private final Pose endPickUpPoint = poseFactory.of(10, 10, 0);
     private RGBIndicator rgb;
-    private final Pose secondShootingPoint = poseFactory.of(60.4, 110.7, 0);
-    private final Pose parkingPoint = poseFactory.of(10, 115.6, -90);
-    ;
+    private final Pose secondShootingPoint = poseFactory.of(58.64, 113.07, 0);
+    private final Pose parkingPoint = poseFactory.of(16.63, 115.6, -90);
+
     private Follower follower; // Add this
     private final PoseFactory p = PoseFactory.degrees(); // add this
-    private final Pose park = p.of(48, 48, 90);
-    private final Pose shooterControlPoseOne = p.of(33.75, 64.87, 45);
-    private final Pose shooterControlPoseTwo = p.of(8.79, 100.39, 45);
+    private final Pose shooterControlPoseOne = p.of(36.1, 89.5, 45);
+    private final Pose shooterControlPoseTwo = p.of(16.63, 104.31, 90);
     private Command autoRoutine() {
         return sequential(
                 follow(follower, startToScore()),
