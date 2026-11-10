@@ -32,12 +32,12 @@ public class firstAuto extends OpMode {
     private RGBIndicator rgb;
     private final Pose secondShootingPoint = poseFactory.of(60.4, 110.7, 0);
     private final Pose parkingPoint = poseFactory.of(10, 115.6, -90);
-
     ;
     private Follower follower; // Add this
     private final PoseFactory p = PoseFactory.degrees(); // add this
     private final Pose park = p.of(48, 48, 90);
-    private final Pose shooterControlPose = p.of(15.13, 92.00, 45);
+    private final Pose shooterControlPoseOne = p.of(33.75, 64.87, 45);
+    private final Pose shooterControlPoseTwo = p.of(8.79, 100.39, 45);
     private Command autoRoutine() {
         return sequential(
                 follow(follower, startToScore()),
@@ -85,7 +85,7 @@ public class firstAuto extends OpMode {
     }
 
     private Path pickUpToShoot(){
-        return curve(endPickUpPoint, shooterControlPose, secondShootingPoint).linear(endPickUpPoint, secondShootingPoint);
+        return curve(endPickUpPoint, shooterControlPoseOne, shooterControlPoseTwo, secondShootingPoint).linear(endPickUpPoint, secondShootingPoint);
     }
     private Path shootToPark(){
         return line(endPickUpPoint, parkingPoint).linear(endPickUpPoint, parkingPoint);
