@@ -54,18 +54,33 @@ public class DriverControlFO extends OpMode {
 
     @Override
     public void loop() {
+        rgb.setRAINBOW();
         follower.update();
         switch (currentState) {
             case MANUAL:
                 driveTrain.drive(gamepad1);
-                if (gamepad1.xWasPressed()){
-                    shootingPose = follower.pose();
-                }
-                else if (gamepad1.yWasPressed()){
-                    currentPose = follower.pose();
-                    Path pathToShooter = line(currentPose,shootingPose).linear(currentPose,shootingPose);
-                    follower.follow(pathToShooter);
-                    currentState = DriveState.AUTO;
+                // 3
+//                if (gamepad1.xWasPressed()){
+//                    shootingPose = follower.pose();
+//                }
+//                else if (gamepad1.yWasPressed()){
+//                    currentPose = follower.pose();
+//                    Path pathToShooter = line(currentPose,shootingPose).linear(currentPose,shootingPose);
+//                    follower.follow(pathToShooter);
+//                    currentState = DriveState.AUTO;
+//                }
+                // 4
+
+                if (gamepad1.aWasPressed()){
+                    if (gamepad1.left_trigger_pressed){
+                        shootingPose = follower.pose();
+                    }
+                    else{
+                        currentPose = follower.pose();
+                        Path pathToShooter = line(currentPose,shootingPose).linear(currentPose,shootingPose);
+                        follower.follow(pathToShooter);
+                        currentState = DriveState.AUTO;
+                    }
                 }
 
                 // 2
