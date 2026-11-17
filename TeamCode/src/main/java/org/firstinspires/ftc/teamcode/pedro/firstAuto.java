@@ -47,10 +47,12 @@ public class firstAuto extends OpMode {
                 follow(follower, scoreToPickUp()),
                 follow(follower, pickingUp()),
                 follow(follower, pickUpToShoot()),
-                follow(follower, shootToPark())
+                follow(follower, shootToPark()),
+                follow(follower, backToStart())
 
 
-        );
+
+                );
     }
     @Override
     public void init() {
@@ -95,6 +97,10 @@ public class firstAuto extends OpMode {
     private Path shootToPark(){
         timer();
         return line(endPickUpPoint, parkingPoint).linear(endPickUpPoint, parkingPoint);
+    }
+
+    private Path backToStart(){
+        return line(parkingPoint, startPose).linear(parkingPoint, startPose);
     }
     // other poses...
 
