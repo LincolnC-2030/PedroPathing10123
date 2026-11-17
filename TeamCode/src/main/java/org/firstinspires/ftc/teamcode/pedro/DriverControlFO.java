@@ -45,6 +45,7 @@ public class DriverControlFO extends OpMode {
         follower.setPose(currentPose);
         follower.update();
         shooter = new Shooter(hardwareMap);
+        driveTrain.resetIMU();
     }
 
     @Override
@@ -59,18 +60,6 @@ public class DriverControlFO extends OpMode {
         switch (currentState) {
             case MANUAL:
                 driveTrain.drive(gamepad1);
-                // 3
-//                if (gamepad1.xWasPressed()){
-//                    shootingPose = follower.pose();
-//                }
-//                else if (gamepad1.yWasPressed()){
-//                    currentPose = follower.pose();
-//                    Path pathToShooter = line(currentPose,shootingPose).linear(currentPose,shootingPose);
-//                    follower.follow(pathToShooter);
-//                    currentState = DriveState.AUTO;
-//                }
-                // 4
-
                 if (gamepad1.aWasPressed()){
                     if (gamepad1.left_trigger_pressed){
                         shootingPose = follower.pose();
@@ -82,40 +71,12 @@ public class DriverControlFO extends OpMode {
                         currentState = DriveState.AUTO;
                     }
                 }
-
-                // 2
-//                if (gamepad1.aWasPressed() && !(gamepad1.left_trigger_pressed)){
-//                    shootingPose = follower.pose();
-//                }
-//                if (gamepad1.aWasPressed() && gamepad1.left_trigger_pressed){
-//                    currentPose = follower.pose();
-//                    Path pathToShooter = line(currentPose,shootingPose).linear(currentPose,shootingPose);
-//                    follower.follow(pathToShooter);
-//                    currentState = DriveState.AUTO;
-//                }
-                // 1
-//                if (gamepad1.aWasPressed() && gamepad1.left_trigger_pressed ){
-//                    currentPose = follower.pose();
-//                    Path pathToShooter = line(currentPose,shootingPose).linear(currentPose,shootingPose);
-//                    follower.follow(pathToShooter);
-//                    currentState = DriveState.AUTO;
-//                    telemetry.addData("movin:","moving");
-//                }
-//                else if (gamepad1.aWasPressed()){
-//                    shootingPose = follower.pose();
-//                    telemetry.addData("pose set:","pose set");
-//
-//                }
-                if (gamepad1.aWasPressed()){
+                if (gamepad2.aWasPressed()){
                     shooter.setVelocity(2000);
                 }
-                if (gamepad1.bWasPressed()){
+                if (gamepad2.bWasPressed()){
                     shooter.stop();
                 }
-//                shooter.setVelocity(gamepad1.left_trigger * 3000);
-
-
-
                 break;
             case AUTO:
                 gamepad1.rumble(25);
@@ -133,6 +94,8 @@ public class DriverControlFO extends OpMode {
         }
 
         telemetry.addData("Drive State:", currentState);
+        telemetry.addData("yawAngle:",driveTrain.sendYawAngle());
+        telemetry.addData("UpPressed?:", driveTrain.sendDpadUpWasPressed());
         telemetry.update();
 
     }

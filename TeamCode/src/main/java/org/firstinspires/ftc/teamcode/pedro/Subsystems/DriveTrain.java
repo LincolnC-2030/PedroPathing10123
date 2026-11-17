@@ -4,6 +4,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
@@ -21,6 +22,7 @@ public class DriveTrain {
     static double rotate = 0;
     static double strafe = 0;
     static double yawAngle = 0;
+    boolean ifGamepadUp = true;
 
 
     public DriveTrain(HardwareMap hardwareMap){
@@ -50,14 +52,20 @@ public class DriveTrain {
                 new RevHubOrientationOnRobot(logoDirection, usbDirection);
         IMU.Parameters parameters = new IMU.Parameters(orientationOnRobot);
         imu.initialize(parameters);
-        imu.resetYaw();
+//        imu.resetYaw();
 
     }
 
 
     public void drive(Gamepad gamepad1){
-        // Press Y to set ZERO ANGLE!
-        if (gamepad1.dpadUpWasPressed()) imu.resetYaw();
+        // Press dpadUp to set ZERO ANGLE!
+        if (gamepad1.dpadUpWasPressed()){
+            imu.resetYaw();
+            ifGamepadUp = true;
+        }
+        else{
+            ifGamepadUp = false;
+        }
 
         // turbo/slow button, slowwwwwwwwwww fasttttttt
         // max
@@ -108,7 +116,22 @@ public class DriveTrain {
         blm.setPower(blp / tempMax * speedLimit);
         brm.setPower(brp / tempMax * speedLimit);
 
+        if (yawAngle == 0){
+            yawAngle = yawAngle + 0.00001;
+        }
 
+
+
+
+    }
+    public void resetIMU(){
+        imu.resetYaw();
+    }
+    public double sendYawAngle(){
+        return yawAngle;
+    }
+    public boolean sendDpadUpWasPressed(){
+        return ifGamepadUp;
     }
 
 
