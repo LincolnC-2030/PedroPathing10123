@@ -12,25 +12,35 @@ import com.pedropathing.ivy.Scheduler;
 import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 import com.pedropathing.ivy.Command;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import org.firstinspires.ftc.teamcode.pedro.Subsystems.RGBIndicator;
 
 @Autonomous
 public class firstAuto extends OpMode {
-// Here the currently defined poses:
+    // Here the currently defined poses:
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final Pose startPose = poseFactory.of(32, 10, 0);
-    private final Pose shootingPoint = poseFactory.of(58.4, 37, 90);
-    private final Pose pickUpPoint = poseFactory.of(31.9, 10, 0);
-    private final Pose endPickUpPoint = poseFactory.of(10, 10, 0);
+    private final Pose restartPose = poseFactory.of(32, 0, 0);
+    private final Pose shootingPoint = poseFactory.of(58.64, 24.59, -90);
+    private final Pose pickUpPoint = poseFactory.of(31.9, 10, -180);
+    private final Pose endPickUpPoint = poseFactory.of(10, 10, -180);
     private RGBIndicator rgb;
-    private final Pose secondShootingPoint = poseFactory.of(58.64, 113.07, 0);
-    private final Pose parkingPoint = poseFactory.of(16.63, 115.6, -90);
+    private final Pose secondShootingPoint = poseFactory.of(58.64, 115.36, 90);
+    private final Pose parkingPoint = poseFactory.of(16.63, 115.6, 0);
 
     private Follower follower; // Add this
     private final PoseFactory p = PoseFactory.degrees(); // add this
-    private final Pose shooterControlPoseOne = p.of(36.1, 89.5, 45);
+    private final Pose shooterControlPoseOne = p.of(36.1, 89.5, 90);
     private final Pose shooterControlPoseTwo = p.of(16.63, 104.31, 90);
+    private final ElapsedTime stateTimer = new ElapsedTime();
+    public void timer() {
+        stateTimer.reset();
+        if (stateTimer.seconds() > 3.0) {
+            stateTimer.reset();
+        }
+    }
     private Command autoRoutine() {
         return sequential(
                 follow(follower, startToScore()),
@@ -38,7 +48,9 @@ public class firstAuto extends OpMode {
                 follow(follower, scoreToPickUp()),
                 follow(follower, pickingUp()),
                 follow(follower, pickUpToShoot()),
-                follow(follower, shootToPark())
+                follow(follower, shootToPark()),
+                follow(follower, backToStart())
+
 
 
                 );
@@ -50,26 +62,31 @@ public class firstAuto extends OpMode {
         follower.setPose(startPose);
         follower.update();
         rgb = new RGBIndicator(hardwareMap);
+        telemetry.addLine("DISCLAIMER! If participating in match, please speak to nearest programmer about disabling the reset pose");
+        telemetry.update();
+
     }
 
     @Override
     public void start() {
         schedule(autoRoutine());
+        stateTimer.reset();
+
     }
 
     @Override
     public void loop() {
         follower.update();
         Scheduler.execute();
-        rgb.setRAINBOW();
+        rgb.setRED();
     }
 
     //  Here are our paths:
     private Path startToScore() {
         return line(startPose, shootingPoint).linear(startPose, shootingPoint);
-    }
-
+        }
     private Path scoreToPickUp(){
+        timer();
         return line(shootingPoint, pickUpPoint).linear(shootingPoint, pickUpPoint);
     }
 
@@ -81,7 +98,12 @@ public class firstAuto extends OpMode {
         return curve(endPickUpPoint, shooterControlPoseOne, shooterControlPoseTwo, secondShootingPoint).linear(endPickUpPoint, secondShootingPoint);
     }
     private Path shootToPark(){
+        timer();
         return line(endPickUpPoint, parkingPoint).linear(endPickUpPoint, parkingPoint);
+    }
+
+    private Path backToStart(){
+        return line(parkingPoint, startPose).linear(parkingPoint, restartPose);
     }
     // other poses...
 
