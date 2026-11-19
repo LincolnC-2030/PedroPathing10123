@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.pedro.Subsystems;
 
+import com.pedropathing.api.PoseFactory;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.math.Pose;
+import com.pedropathing.paths.Path;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -17,16 +21,17 @@ public class DriveTrain {
     private DcMotor brm;
     private IMU imu;
 
-    static double speedLimit = 0.8;
-    static double drive = 0;
-    static double rotate = 0;
-    static double strafe = 0;
-    static double yawAngle = 0;
-    boolean ifGamepadUp = true;
+    private double speedLimit = 0.8;
+    private double drive = 0;
+    private double rotate = 0;
+    private double strafe = 0;
+    private double yawAngle = 0;
+    private boolean ifGamepadUp = true;
+    private Follower follower;
 
 
-    public DriveTrain(HardwareMap hardwareMap){
-
+    public DriveTrain(HardwareMap hardwareMap, Follower follower){
+        this.follower = follower;
         flm = hardwareMap.get(DcMotor.class, "frontLeftMotor");
         frm = hardwareMap.get(DcMotor.class, "frontRightMotor");
         blm = hardwareMap.get(DcMotor.class, "backLeftMotor");
@@ -43,15 +48,16 @@ public class DriveTrain {
         brm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // IMU wth wilted rose emoji
-        imu = hardwareMap.get(IMU.class, "REVimu");
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection =
-                RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection usbDirection =
-                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT; // MAYBE CHANGE BACK TO FORWARD IF IT BREAKS ANYTHING
-        RevHubOrientationOnRobot orientationOnRobot =
-                new RevHubOrientationOnRobot(logoDirection, usbDirection);
-        IMU.Parameters parameters = new IMU.Parameters(orientationOnRobot);
-        imu.initialize(parameters);
+//        imu = hardwareMap.get(IMU.class, "REVimu");
+
+//        RevHubOrientationOnRobot.LogoFacingDirection logoDirection =
+//                RevHubOrientationOnRobot.LogoFacingDirection.UP;
+//        RevHubOrientationOnRobot.UsbFacingDirection usbDirection =
+//                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT; // MAYBE CHANGE BACK TO FORWARD IF IT BREAKS ANYTHING
+//        RevHubOrientationOnRobot orientationOnRobot =
+//                new RevHubOrientationOnRobot(logoDirection, usbDirection);
+//        IMU.Parameters parameters = new IMU.Parameters(orientationOnRobot);
+//        imu.initialize(parameters);
 //        imu.resetYaw();
 
     }
@@ -59,8 +65,11 @@ public class DriveTrain {
 
     public void drive(Gamepad gamepad1){
         // Press dpadUp to set ZERO ANGLE!
+        follower.update();
         if (gamepad1.dpadUpWasPressed()){
-            imu.resetYaw();
+//            imu.resetYaw();
+            Pose currentPose = follower.pose();
+            follower.setPose(new Pose(currentPose.x(), currentPose.y(), 0));
             ifGamepadUp = true;
         }
         else{
@@ -94,7 +103,8 @@ public class DriveTrain {
 
 
         // field oriented control!
-        yawAngle = -1 * imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//        yawAngle = -1 * imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        yawAngle = -1*Math.toRadians(follower.pose().heading());
         double sinTemp = Math.sin(yawAngle);
         double cosTemp = Math.cos(yawAngle);
         double fieldX = strafe * cosTemp - drive * sinTemp;
@@ -116,17 +126,18 @@ public class DriveTrain {
         blm.setPower(blp / tempMax * speedLimit);
         brm.setPower(brp / tempMax * speedLimit);
 
-        if (yawAngle == 0){
-            yawAngle = yawAngle + 0.00001;
-        }
+//        if (yawAngle == 0){
+//            yawAngle = yawAngle + 0.00001;
+//            if (yawAngle == 0)
+//        }
 
 
 
 
     }
-    public void resetIMU(){
-        imu.resetYaw();
-    }
+//    public void resetIMU(){
+//        imu.resetYaw();
+//    }
     public double sendYawAngle(){
         return yawAngle;
     }
