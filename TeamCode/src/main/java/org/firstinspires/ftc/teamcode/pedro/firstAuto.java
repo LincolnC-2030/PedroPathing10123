@@ -22,6 +22,7 @@ public class firstAuto extends OpMode {
     // Here the currently defined poses:
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final Pose startPose = poseFactory.of(32, 10, 0);
+    private final Pose restartPose = poseFactory.of(32, 0, 0);
     private final Pose shootingPoint = poseFactory.of(58.64, 24.59, -90);
     private final Pose pickUpPoint = poseFactory.of(31.9, 10, -180);
     private final Pose endPickUpPoint = poseFactory.of(10, 10, -180);
@@ -61,6 +62,8 @@ public class firstAuto extends OpMode {
         follower.setPose(startPose);
         follower.update();
         rgb = new RGBIndicator(hardwareMap);
+        telemetry.addLine("DISCLAIMER! If participating in match, please speak to nearest programmer about disabling the reset pose");
+        telemetry.update();
 
     }
 
@@ -100,7 +103,7 @@ public class firstAuto extends OpMode {
     }
 
     private Path backToStart(){
-        return line(parkingPoint, startPose).linear(parkingPoint, startPose);
+        return line(parkingPoint, startPose).linear(parkingPoint, restartPose);
     }
     // other poses...
 
