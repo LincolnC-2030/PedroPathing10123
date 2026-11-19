@@ -104,7 +104,7 @@ public class DriveTrain {
 
         // field oriented control!
 //        yawAngle = -1 * imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        yawAngle = -1*Math.toRadians(follower.pose().heading());
+        yawAngle = -1*(follower.pose().heading());
         double sinTemp = Math.sin(yawAngle);
         double cosTemp = Math.cos(yawAngle);
         double fieldX = strafe * cosTemp - drive * sinTemp;

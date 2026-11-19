@@ -40,11 +40,11 @@ public class DriverControlFO extends OpMode {
     public void init() {
         rgb = new RGBIndicator(hardwareMap);
         rgb.setZERO();
-        driveTrain = new DriveTrain(hardwareMap, follower);
         follower = Constants.create(hardwareMap);
         follower.setPose(currentPose);
         follower.update();
         shooter = new Shooter(hardwareMap);
+        driveTrain = new DriveTrain(hardwareMap, follower);
 //        driveTrain.resetIMU();
     }
 
